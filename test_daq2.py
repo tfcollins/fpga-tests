@@ -1,19 +1,39 @@
 import pytest
+import iio_scanner
 import iio
 import tools
 
+dev_checked = False
+found_dev = False
+board_config = []
+
 # Create board configuration
 board_name = "daq2"
-username = "root"
-password = "analog"
-board_ip = "192.168.86.40"
 devices = ["axi-ad9680-hpc","axi-ad9144-hpc","ad9523-1","ad7291"]
 devices_us = devices+["ams"]
 boot_bin = "BOOT.BIN"
 
-board_config = tools.config(board_name, username, password, board_ip, devices, \
-devices_us, boot_bin)
 
+def check_dev(name):
+    global dev_checked
+    global found_dev
+    if not dev_checked:
+        found_dev, board = iio_scanner.find_device(name)
+        if found_dev:
+            global URI
+            global devices_us
+            global devices
+            global boot_bin
+            global board_name
+            global board_config
+            URI = board.uri
+            board_config = tools.config(board_name, \
+                boot_bin, board.uri[3:], devices, devices_us)
+        dev_checked = True
+    return found_dev
+
+
+@pytest.mark.skipif(not check_dev("daq2"), reason="PlutoSDR not connected")
 @pytest.mark.dependency()
 def test_board_available():
     ctx = iio.Context("ip:"+board_config.board_ip)

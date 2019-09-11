@@ -5,7 +5,7 @@ import subprocess
 import serial
 
 class config:
-    def __init__(self, board_name, un, pw, ip, dev, dev_us, boot_bin_filename):
+    def __init__(self, board_name, boot_bin_filename, ip, dev, dev_us, un="root", pw="analog"):
         self.board_name = board_name
         self.username = un
         self.password = pw
