@@ -1,8 +1,8 @@
 #!/bin/bash
 BOARD=$1
 echo $BOARD
-FILES=$(find ../test/BINS/ -type f -name "*_$BOARD_*.BIN")
-echo $FILES
+IFS=","
+FILES=$(find ../test/BINS/ -type f -name "*$BOARD*.BIN" -printf "'%f',")
 for bin in $FILES
 do
   echo "Checking $bin"
