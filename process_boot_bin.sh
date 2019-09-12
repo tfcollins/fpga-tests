@@ -1,4 +1,5 @@
 #!/bin/bash
+export PYTHONPATH=$PYTHONPATH:"/usr/lib/python2.7/site-packages/"
 BOARD=$1
 echo $BOARD
 IFS=","
