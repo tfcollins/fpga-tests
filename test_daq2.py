@@ -2,6 +2,7 @@ import pytest
 import iio_scanner
 import iio
 import tools
+import time
 
 dev_checked = False
 found_dev = False
