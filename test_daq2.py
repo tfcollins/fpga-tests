@@ -61,6 +61,7 @@ def test_board_reboot():
 
 @pytest.mark.dependency(depends=["test_board_reboot"])
 def test_iio_devices_appear():
+    time.sleep(10) # Give time for iiod to start
     ctx = iio.Context("ip:"+board_config.board_ip)
     found = 0
     for dev in ctx.devices:
