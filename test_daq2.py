@@ -3,6 +3,7 @@ import iio_scanner
 import iio
 import tools
 import time
+import shutil
 
 dev_checked = False
 found_dev = False
@@ -70,3 +71,19 @@ def test_iio_devices_appear():
             found = found + 1
     if found!=len(board_config.devices):
         assert False
+        
+@pytest.mark.dependency(depends=["test_board_reboot"])
+def test_reload_reference_boot_file():
+    if board_config.arch == 'arm64':
+        shutil.copy2('boot_files/daq2_zcu102_BOOT.BIN','BOOT.BIN')
+    else:
+        shutil.copy2('boot_files/daq2_zc706_BOOT.BIN','BOOT.BIN')
+    # Copy BOOT.BIN to board
+    board_config.update_boot_bin()
+    # Start serial logging
+    board_config.serial_start()
+    # Reboot board
+    r = board_config.reboot_board()
+    # Save serial data
+    board_config.serial_done()
+    assert r
